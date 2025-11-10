@@ -5,6 +5,98 @@
 // Este código inicial serve como base para o desenvolvimento do sistema de controle de peças.
 // Use as instruções de cada nível para desenvolver o desafio.
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define CAPACIDADE_FILA 5
+
+/* peça do jogo */
+typedef struct {
+    char nome; /* 'I', 'O', 'T', 'L' */
+    int id;    /* id*/
+} Peca;
+
+/* Fila circular de peças */
+typedef struct {
+    Peca dados[CAPACIDADE_FILA];
+    int head;   /* índice do elemento da frente */
+    int tail;   /* índice para inserir o próximo elemento */
+    int tamanho;/* número atual de elementos */
+} FilaPecas;
+
+/* Protótipos */
+void inicializarFila(FilaPecas *f);
+Peca gerarPeca(void);
+int enqueue(FilaPecas *f, Peca p);
+int dequeue(FilaPecas *f, Peca *removida);
+void imprimirFila(const FilaPecas *f);
+void esperarEnter(void);
+
+static int proximoId = 0; /* contador de ids */
+
+/* Inicializa a fila vazia */
+void inicializarFila(FilaPecas *f) {
+    f->head = 0;
+    f->tail = 0;
+    f->tamanho = 0;
+}
+
+/* Gera uma peça aleatória com id */
+Peca gerarPeca(void) {
+    const char tipos[] = {'I', 'O', 'T', 'L'};
+    Peca p;
+    p.nome = tipos[rand() % 4];
+    p.id = proximoId++;
+    return p;
+}
+
+/* Insere peça no final da fila. Retorna 1 se sucesso, 0 se cheia. */
+int enqueue(FilaPecas *f, Peca p) {
+    if (f->tamanho == CAPACIDADE_FILA) {
+        return 0; /* fila cheia */
+    }
+    f->dados[f->tail] = p;
+    f->tail = (f->tail + 1) % CAPACIDADE_FILA;
+    f->tamanho++;
+    return 1;
+}
+
+/* Remove peça da frente. Retorna 1 se removida, 0 se vazia. */
+int dequeue(FilaPecas *f, Peca *removida) {
+    if (f->tamanho == 0) return 0; /* fila vazia */
+    if (removida != NULL) {
+        *removida = f->dados[f->head];
+    }
+    f->head = (f->head + 1) % CAPACIDADE_FILA;
+    f->tamanho--;
+    return 1;
+}
+
+/* Imprime o estado atual da fila no formato: [T 0] [O 1] ... */
+void imprimirFila(const FilaPecas *f) {
+    printf("\nFila de peças\n\n");
+    if (f->tamanho == 0) {
+        printf("(vazia)\n");
+        return;
+    }
+    int idx = f->head;
+    for (int i = 0; i < f->tamanho; ++i) {
+        Peca p = f->dados[idx];
+        printf("[ %c %d ]", p.nome, p.id);
+        if (i < f->tamanho - 1) printf(" ");
+        idx = (idx + 1) % CAPACIDADE_FILA;
+    }
+    printf("\n");
+}
+
+/* Pequena pausa aguardando Enter para facilitar leitura */
+void esperarEnter(void) {
+    printf("\nPressione Enter para continuar...");
+    while (getchar() != '\n');
+}
+
+
 int main() {
 
     // 🧩 Nível Novato: Fila de Peças Futuras
@@ -20,8 +112,10 @@ int main() {
     // - A cada remoção, insira uma nova peça ao final da fila.
 
 
+    return 0;
+}
 
-    // 🧠 Nível Aventureiro: Adição da Pilha de Reserva
+// 🧠 Nível Aventureiro: Adição da Pilha de Reserva
     //
     // - Implemente uma pilha linear com capacidade para 3 peças.
     // - Crie funções como inicializarPilha(), push(), pop(), pilhaCheia(), pilhaVazia().
@@ -49,8 +143,4 @@ int main() {
     // - O menu deve ficar assim:
     //      4 - Trocar peça da frente com topo da pilha
     //      5 - Trocar 3 primeiros da fila com os 3 da pilha
-
-
-    return 0;
-}
 
