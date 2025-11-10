@@ -124,6 +124,57 @@ int main() {
         enqueue(&fila, p); /* sabemos que cabe */
     }
 
+    
+    int opcao;
+    do {
+        /* Mostra estado atual e menu */
+        imprimirFila(&fila);
+        printf("\nOpções de ação:\n");
+        printf("1 - Jogar peça (dequeue)\n");
+        printf("2 - Inserir nova peça (enqueue)\n");
+        printf("0 - Sair\n");
+        printf("\nEscolha: ");
+
+        /* ler opção de forma segura */
+        if (scanf("%d", &opcao) != 1) {
+            /* entrada inválida: limpar stdin e repetir */
+            opcao = -1;
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF) {}
+            printf("Entrada inválida. Tente novamente.\n");
+            continue;
+        }
+
+        /* limpar '\n' deixado no buffer para esperarEnter funcionar */
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {}
+
+        if (opcao == 1) {
+            Peca removida;
+            if (dequeue(&fila, &removida)) {
+                printf("\nPeça jogada: %c %d\n", removida.nome, removida.id);
+            } else {
+                printf("\nFila vazia. Nenhuma peça para jogar.\n");
+            }
+            imprimirFila(&fila);
+            esperarEnter();
+        } else if (opcao == 2) {
+            Peca nova = gerarPeca();
+            if (enqueue(&fila, nova)) {
+                printf("\nPeça inserida: %c %d\n", nova.nome, nova.id);
+            } else {
+                printf("\nFila cheia. Não foi possível inserir nova peça.\n");
+            }
+            imprimirFila(&fila);
+            esperarEnter();
+        } else if (opcao == 0) {
+            printf("\nSaindo...\n");
+        } else {
+            printf("\nOpção inválida.\n");
+            esperarEnter();
+        }
+
+    } while (opcao != 0);
 
     return 0;
 }
