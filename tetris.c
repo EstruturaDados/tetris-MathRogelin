@@ -111,6 +111,19 @@ int main() {
     //      0 - Sair
     // - A cada remoção, insira uma nova peça ao final da fila.
 
+    FilaPecas fila;
+    inicializarFila(&fila);
+
+    /* Inicializa gerador aleatório e id */
+    srand((unsigned) time(NULL));
+    proximoId = 0;
+
+    /* Preenche fila inicial com CAPACIDADE_FILA peças */
+    for (int i = 0; i < CAPACIDADE_FILA; ++i) {
+        Peca p = gerarPeca();
+        enqueue(&fila, p); /* sabemos que cabe */
+    }
+
 
     return 0;
 }
