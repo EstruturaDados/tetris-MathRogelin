@@ -142,6 +142,67 @@ int main() {
     for (int i = 0; i < CAPACIDADE_FILA; ++i)
         enqueue(&fila, gerarPeca());
 
+    int opcao;
+    do {
+        printf("\n================ ESTADO ATUAL ================\n");
+        imprimirFila(&fila);
+        imprimirPilha(&pilha);
+        printf("\n==============================================\n");
 
+        printf("Opções de ação:\n");
+        printf("1 - Jogar peça (remove da fila)\n");
+        printf("2 - Reservar peça (mover da fila -> pilha)\n");
+        printf("3 - Usar peça reservada (remover topo da pilha)\n");
+        printf("0 - Sair\n");
+        printf("Escolha: ");
+
+        if (scanf("%d", &opcao) != 1) {
+            opcao = -1;
+            int c; while ((c = getchar()) != '\n' && c != EOF);
+            printf("Entrada inválida.\n");
+            continue;
+        }
+
+        int c; while ((c = getchar()) != '\n' && c != EOF);
+
+        if (opcao == 1) {
+            Peca jogada;
+            if (dequeue(&fila, &jogada)) {
+                printf("\nPeça jogada: [ %c %d ]\n", jogada.nome, jogada.id);
+                enqueue(&fila, gerarPeca()); // manter fila cheia
+            } else {
+                printf("\nFila vazia.\n");
+            }
+        } 
+        else if (opcao == 2) {
+            Peca p;
+            if (pilha.topo == CAPACIDADE_PILHA - 1) {
+                printf("\nPilha cheia. Não é possível reservar.\n");
+            } else if (dequeue(&fila, &p)) {
+                push(&pilha, p);
+                printf("\nPeça %c %d movida para reserva.\n", p.nome, p.id);
+                enqueue(&fila, gerarPeca()); // repõe na fila
+            } else {
+                printf("\nFila vazia.\n");
+            }
+        } 
+        else if (opcao == 3) {
+            Peca usada;
+            if (pop(&pilha, &usada)) {
+                printf("\nPeça da reserva usada: [ %c %d ]\n", usada.nome, usada.id);
+            } else {
+                printf("\nPilha vazia. Nenhuma peça para usar.\n");
+            }
+        } 
+        else if (opcao == 0) {
+            printf("\nSaindo...\n");
+        } 
+        else {
+            printf("\nOpção inválida.\n");
+        }
+
+        esperarEnter();
+
+    } while (opcao != 0);
     return 0;
 }
