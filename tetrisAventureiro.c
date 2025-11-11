@@ -128,3 +128,20 @@ void esperarEnter(void) {
     while (getchar() != '\n');
 }
 
+/* ===================== PROGRAMA PRINCIPAL ===================== */
+
+int main() {
+    srand((unsigned) time(NULL));
+    FilaPecas fila;
+    PilhaReserva pilha;
+    inicializarFila(&fila);
+    inicializarPilha(&pilha);
+    proximoId = 0;
+
+    /* preencher fila inicial */
+    for (int i = 0; i < CAPACIDADE_FILA; ++i)
+        enqueue(&fila, gerarPeca());
+
+
+    return 0;
+}
